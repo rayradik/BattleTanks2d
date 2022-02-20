@@ -56,7 +56,7 @@ namespace BattleTanks2d
             walls[0] = new Wall(0, 1, 715, 19);
             walls[1] = new Wall(0, 416, 715, 19);
 
-            this.Text = "Flappy ball Score: 0";
+            this.Text = "Battle Tanks Score: 0";
             AddBulletToEnemies(enemies);
             timer1.Start();
         }

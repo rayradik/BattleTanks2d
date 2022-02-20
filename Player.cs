@@ -41,8 +41,8 @@ namespace BattleTanks2d
             Alive = false;
             timer1.Stop();
 
-            Form form1 = Application.OpenForms[0];
-            Form form2 = Application.OpenForms[0];
+            Form form1 = Application.OpenForms["Form1"];
+            Form form2 = Application.OpenForms["Start"];
 
             DialogResult vibor2 = MessageBox.Show("Счет: " + Score + "\nХотите начать заново?", "Вы проиграли!", MessageBoxButtons.YesNo);
             if (vibor2 == DialogResult.No)

@@ -1,7 +1,7 @@
 ﻿
 namespace BattleTanks2d
 {
-    partial class Form1
+    partial class HowToPlay
     {
         /// <summary>
         /// Required designer variable.
@@ -29,30 +29,19 @@ namespace BattleTanks2d
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
-            // Form1
+            // HowToPlay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::BattleTanks2d.Properties.Resources.background;
-            this.ClientSize = new System.Drawing.Size(954, 535);
-            this.DoubleBuffered = true;
-            this.Name = "Form1";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
+            this.ClientSize = new System.Drawing.Size(800, 528);
+            this.Name = "HowToPlay";
+            this.Text = "HowToPlay";
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Timer timer1;
     }
 }
-
