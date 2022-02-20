@@ -36,5 +36,23 @@ namespace BattleTanks2d
                 Y += 4 + speed;
             }
         }
+        public bool Pop(Timer timer1)
+        {
+            Alive = false;
+            timer1.Stop();
+
+            Form form1 = Application.OpenForms[0];
+            Form form2 = Application.OpenForms[0];
+
+            DialogResult vibor2 = MessageBox.Show("Счет: " + Score + "\nХотите начать заново?", "Вы проиграли!", MessageBoxButtons.YesNo);
+            if (vibor2 == DialogResult.No)
+            {
+                form1.Close();
+                form2.Show();
+                return false;
+            }
+            else
+                return true;
+        }
     }
 }

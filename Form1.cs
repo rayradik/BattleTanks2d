@@ -20,6 +20,9 @@ namespace BattleTanks2d
         Enemy[] enemies;
         Wall[] walls;
         bool up, down, space;
+        bool fire = true;
+        int boost = 0;
+        int boostPlayer = 0;
         public Form1()
         {
             InitializeComponent();
@@ -107,15 +110,21 @@ namespace BattleTanks2d
                     break;
             }
         }
-        bool fire = true;
-        int boost = 0;
-        int boostPlayer = 0;
         private void Update(object sender, EventArgs e)
         {
             if (tank.Collide(blocks[0]) || tank.Collide(blocks[1]) || tank.Collide(blocks[2]) || tank.Collide(blocks[3]) || tank.Collide(blocks[4]) || tank.Collide(blocks[5])
                 || tank.Collide(bulletsE[0]) || tank.Collide(bulletsE[1]) || tank.Collide(enemies[0]) || tank.Collide(enemies[1]) || tank.Collide(walls[0]) || tank.Collide(walls[1]))
             {
-                timer1.Stop();
+                if (tank.Pop(timer1))
+                {
+                    Thread.Sleep(1000);
+                    fire = true;
+                    boost = 0;
+                    boostPlayer = 0;
+                    up = false;
+                    down = false;
+                    Init();
+                }
             }
             if (space && fire == true)
             {
@@ -138,7 +147,7 @@ namespace BattleTanks2d
             AddBulletToEnemies(enemies);
             if (BulletCollide(enemies))
             {
-                this.Text = "Flappy ball Score: " + ++tank.Score;
+                this.Text = "Battle Tanks Score: " + ++tank.Score;
                 if (tank.Score == 5)
                 {
                     boost ++;
