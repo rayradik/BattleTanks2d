@@ -26,10 +26,12 @@ namespace BattleTanks2d
         {
             FigureImage = new Bitmap("C:\\laboratorki\\Tanks\\BattleTanks\\Resources\\bullet.png");
         }
-        public override void Move()
+        public override void Move(int speedUp)
         {
-            X -= 9;
+            MoveSpeedUp = speedUp;
+            X -= 6 + MoveSpeedUp;
         }
+
         public void AddBulletToTank(Enemy tank, Bullet bullet)
         {
             bullet.X = tank.X - 15;

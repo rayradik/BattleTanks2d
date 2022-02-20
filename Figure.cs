@@ -13,6 +13,7 @@ namespace BattleTanks2d
         public float Y { get; set; }
         public float SizeX { get; set; }
         public float SizeY { get; set; }
+        public int MoveSpeedUp { get; set; }
         public Image FigureImage { get; set; }
         public string Tag { get; set; }
         public Figure()
@@ -40,9 +41,11 @@ namespace BattleTanks2d
             SizeX = sizeX;
             SizeY = sizeY;
         }
-        public virtual void Move()
+        public virtual void Move(int speedUp)
         {
-            X -= 5;
+            MoveSpeedUp = speedUp;
+            X -= 4 + MoveSpeedUp;
+
         }
         public virtual void SpawnX()
         {
@@ -52,6 +55,14 @@ namespace BattleTanks2d
         {
             Random rnd = new Random();
             Y = rnd.Next(100, 295);
+        }
+        public bool Collide(Figure let)
+        {
+            if (X < let.X + let.SizeX && X + SizeX > let.X && Y < let.Y + let.SizeY && SizeY + Y > let.Y)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

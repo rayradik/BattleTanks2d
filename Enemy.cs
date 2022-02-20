@@ -29,9 +29,10 @@ namespace BattleTanks2d
             Random rnd = new Random();
             Y = rnd.Next(50, 330);
         }
-        public override void Move()
+        public override void Move(int speedUp)
         {
-            X -= 6;
+            MoveSpeedUp = speedUp;
+            X -= 5 + MoveSpeedUp;
         }
     }
 }

@@ -32,9 +32,10 @@ namespace BattleTanks2d
             bullet.X = tank.X + 65;
             bullet.Y = tank.Y + 21;
         }
-        public override void Move()
+        public override void Move(int speedUp)
         {
-            X += 8;
+            MoveSpeedUp = speedUp;
+            X += 8 + MoveSpeedUp;
         }
     }
 }

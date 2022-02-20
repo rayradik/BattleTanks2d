@@ -18,6 +18,7 @@ namespace BattleTanks2d
         Bullet bullet;
         BulletE[] bulletsE;
         Enemy[] enemies;
+        Wall[] walls;
         bool up, down, space;
         public Form1()
         {
@@ -48,6 +49,10 @@ namespace BattleTanks2d
             enemies[0] = new Enemy(450, 45, 50, 45);
             enemies[1] = new Enemy(500, 350, 50, 45);
 
+            walls = new Wall[2];
+            walls[0] = new Wall(0, 1, 715, 19);
+            walls[1] = new Wall(0, 416, 715, 19);
+
             this.Text = "Flappy ball Score: 0";
             AddBulletToEnemies(enemies);
             timer1.Start();
@@ -60,15 +65,16 @@ namespace BattleTanks2d
             {
                 graphics.DrawImage(blocks[i].FigureImage, blocks[i].X, blocks[i].Y, blocks[i].SizeX, blocks[i].SizeY);
             }
-            if (fire == false && bullet.Active == true)
-            {
-                graphics.DrawImage(bullet.FigureImage, bullet.X, bullet.Y, bullet.SizeX, bullet.SizeY);
-            }
+            graphics.DrawImage(bullet.FigureImage, bullet.X, bullet.Y, bullet.SizeX, bullet.SizeY);
+
             graphics.DrawImage(enemies[0].FigureImage, enemies[0].X, enemies[0].Y, enemies[0].SizeX, enemies[0].SizeY);
             graphics.DrawImage(enemies[1].FigureImage, enemies[1].X, enemies[1].Y, enemies[1].SizeX, enemies[1].SizeY);
 
             graphics.DrawImage(bulletsE[0].FigureImage, bulletsE[0].X, bulletsE[0].Y, bulletsE[0].SizeX, bulletsE[0].SizeY);
             graphics.DrawImage(bulletsE[1].FigureImage, bulletsE[1].X, bulletsE[1].Y, bulletsE[1].SizeX, bulletsE[1].SizeY);
+
+            graphics.DrawImage(walls[0].FigureImage, walls[0].X, walls[0].Y, walls[0].SizeX, walls[0].SizeY);
+            graphics.DrawImage(walls[1].FigureImage, walls[1].X, walls[1].Y, walls[1].SizeX, walls[1].SizeY);
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -102,9 +108,12 @@ namespace BattleTanks2d
             }
         }
         bool fire = true;
+        int boost = 0;
+        int boostPlayer = 0;
         private void Update(object sender, EventArgs e)
         {
-            if (tank.Collide(blocks[0]))
+            if (tank.Collide(blocks[0]) || tank.Collide(blocks[1]) || tank.Collide(blocks[2]) || tank.Collide(blocks[3]) || tank.Collide(blocks[4]) || tank.Collide(blocks[5])
+                || tank.Collide(bulletsE[0]) || tank.Collide(bulletsE[1]) || tank.Collide(enemies[0]) || tank.Collide(enemies[1]) || tank.Collide(walls[0]) || tank.Collide(walls[1]))
             {
                 timer1.Stop();
             }
@@ -120,23 +129,42 @@ namespace BattleTanks2d
                 {
                     bullet.Active = false;
                     fire = true;
+                    bullet.X = 0;
+                    bullet.Y = 0;
                 }
-                bullet.Move();
+                bullet.Move(0);
             }
-
-            tank.MoveUpDown(up, down);
-            MoveBlocks(blocks);
-            MoveEnemies(enemies);
-            MoveEnemiesBullets(bulletsE);
+            tank.MoveUpDown(up, down, boostPlayer);
             AddBulletToEnemies(enemies);
+            if (BulletCollide(enemies))
+            {
+                this.Text = "Flappy ball Score: " + ++tank.Score;
+                if (tank.Score == 5)
+                {
+                    boost ++;
+                    boostPlayer++;
+                }
+                if(tank.Score == 10)
+                {
+                    boost++;
+                }
+                if (tank.Score == 15)
+                {
+                    boost++;
+                    boostPlayer++;
+                }
+            }
+            MoveBlocks(blocks, boost);
+            MoveEnemies(enemies, boost);
+            MoveEnemiesBullets(bulletsE, boost);
             Invalidate();
         }
 
-        private void MoveBlocks(Block[] blocks)
+        private void MoveBlocks(Block[] blocks, int speed)
         {
             for (int i = 0; i < blocks.Length; i++)
             {
-                blocks[i].Move();
+                blocks[i].Move(speed);
                 if (blocks[i].X < -65)
                 {
                     if (blocks[i].Tag == "blockM")
@@ -151,17 +179,21 @@ namespace BattleTanks2d
                 }
             }
         }
-        private void MoveEnemies(Enemy[] enemies)
+        private void MoveEnemies(Enemy[] enemies, int speed)
         {
             for (int i = 0; i < enemies.Length; i++)
             {
-                enemies[i].Move();
+                enemies[i].Move(speed);
                 if (enemies[i].X < -65)
                 {
-                    enemies[i].SpawnX();
-                    enemies[i].SpawnYRandom();
+                    MoveEnemy(enemies[i]);
                 }
             }
+        }
+        private void MoveEnemy(Figure enemies)
+        {
+            enemies.SpawnX();
+            enemies.SpawnYRandom();
         }
         private void AddBulletToEnemies(Enemy[] enemies)
         {
@@ -169,22 +201,40 @@ namespace BattleTanks2d
             {
                 if (bulletsE[i].Tag == "bulletE")
                 {
-                    if(bulletsE[i].X < -18)
+                    if (bulletsE[i].X < -18)
                     {
                         bulletsE[i].AddBulletToTank(enemies[i], bulletsE[i]);
                     }
                 }
             }
         }
-        private void MoveEnemiesBullets(BulletE[] bulletsE)
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MoveEnemiesBullets(BulletE[] bulletsE, int speed)
         {
             for (int i = 0; i < bulletsE.Length; i++)
             {
                 if (bulletsE[i].Tag == "bulletE")
                 {
-                    bulletsE[i].Move();
+                    bulletsE[i].Move(speed);
                 }
             }
+        }
+        private bool BulletCollide(Figure[] figures)
+        {
+            for (int i = 0; i < figures.Length; i++)
+            {
+                if (bullet.Collide(figures[i]))
+                {
+                    MoveEnemy(figures[i]);
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
